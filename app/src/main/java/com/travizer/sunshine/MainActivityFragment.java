@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.widget.Toast;
+//import android.widget.Toast;
+import android.util.Log;
 
 /**
  * A placeholder fragment containing a simple view.
