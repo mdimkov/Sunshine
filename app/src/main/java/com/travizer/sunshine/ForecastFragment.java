@@ -27,6 +27,10 @@ import java.util.List;
 import android.widget.Toast;
 import android.util.Log;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -88,14 +92,35 @@ public class ForecastFragment extends Fragment {
             FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
             fetchWeatherTask.execute("94043,US");
 
-            int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                    "android.permission.INTERNET");
+            WeatherDataParser wdp = new WeatherDataParser();
 
-            Toast.makeText(getActivity(),"permission check: " + Integer.toString(permissionCheck),Toast.LENGTH_LONG).show();
+            String theJason = "{\"city\":{\"id\":5375480,\"name\":\"Mountain View\",\"coord\":{\"lon\":-122.083847,\"lat\":37.386051},\"country\":\"US\",\"population\":0},\"cod\":\"200\",\"message\":0.0095,\"cnt\":7,\"list\":[{\"dt\":1455739200,\"temp\":{\"day\":18.13,\"min\":9.11,\"max\":19.36,\"night\":9.11,\"eve\":13.72,\"morn\":16.58},\"pressure\":979.48,\"humidity\":67,\"weather\":[{\"id\":502,\"main\":\"Rain\",\"description\":\"heavy intensity rain\",\"icon\":\"10d\"}],\"speed\":4.4,\"deg\":179,\"clouds\":64,\"rain\":12.9},{\"dt\":1455825600,\"temp\":{\"day\":13.64,\"min\":4.1,\"max\":13.64,\"night\":4.1,\"eve\":8.97,\"morn\":9.89},\"pressure\":989.99,\"humidity\":90,\"weather\":[{\"id\":501,\"main\":\"Rain\",\"description\":\"moderate rain\",\"icon\":\"10d\"}],\"speed\":1.51,\"deg\":221,\"clouds\":12,\"rain\":9.52},{\"dt\":1455912000,\"temp\":{\"day\":13.24,\"min\":3.22,\"max\":13.24,\"night\":7.91,\"eve\":9.89,\"morn\":3.22},\"pressure\":994.87,\"humidity\":82,\"weather\":[{\"id\":500,\"main\":\"Rain\",\"description\":\"light rain\",\"icon\":\"10d\"}],\"speed\":2.01,\"deg\":197,\"clouds\":88,\"rain\":0.92},{\"dt\":1455998400,\"temp\":{\"day\":15.31,\"min\":3.54,\"max\":15.33,\"night\":3.54,\"eve\":9.38,\"morn\":6.98},\"pressure\":998.8,\"humidity\":85,\"weather\":[{\"id\":801,\"main\":\"Clouds\",\"description\":\"few clouds\",\"icon\":\"02d\"}],\"speed\":1.51,\"deg\":256,\"clouds\":20},{\"dt\":1456084800,\"temp\":{\"day\":11.94,\"min\":6.35,\"max\":16.42,\"night\":9.6,\"eve\":16.42,\"morn\":6.35},\"pressure\":1019.01,\"humidity\":0,\"weather\":[{\"id\":800,\"main\":\"Clear\",\"description\":\"sky is clear\",\"icon\":\"01d\"}],\"speed\":2.13,\"deg\":33,\"clouds\":1},{\"dt\":1456171200,\"temp\":{\"day\":13.7,\"min\":7.2,\"max\":17.97,\"night\":10.19,\"eve\":17.97,\"morn\":7.2},\"pressure\":1017.63,\"humidity\":0,\"weather\":[{\"id\":800,\"main\":\"Clear\",\"description\":\"sky is clear\",\"icon\":\"01d\"}],\"speed\":2.2,\"deg\":93,\"clouds\":16},{\"dt\":1456257600,\"temp\":{\"day\":14.44,\"min\":8.66,\"max\":18.44,\"night\":11.25,\"eve\":18.44,\"morn\":8.66},\"pressure\":1017.61,\"humidity\":0,\"weather\":[{\"id\":500,\"main\":\"Rain\",\"description\":\"light rain\",\"icon\":\"10d\"}],\"speed\":1.4,\"deg\":55,\"clouds\":28}]}";
+            double md = wdp.getMaxTemperatureForDay(theJason, 3);
+
+            Toast.makeText(getActivity(),Double.toString(md),Toast.LENGTH_LONG).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    public class WeatherDataParser{
+        public double getMaxTemperatureForDay(String weatherJsonStr, int dayIndex) {
+            double temperature = 0;
+            try {
+                JSONObject weather = new JSONObject(weatherJsonStr);
+                JSONArray days = weather.getJSONArray("list");
+                JSONObject dayInfo = days.getJSONObject(dayIndex);
+                JSONObject temperatureInfo = dayInfo.getJSONObject("temp");
+                temperature = temperatureInfo.getDouble("max");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                return temperature;
+            }
+        }
+    }
+
 
     public class FetchWeatherTask extends AsyncTask<String, Void, Void>{
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
@@ -141,8 +166,6 @@ public class ForecastFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtURI.toString());
-
-                Log.v("MDIMKOV", url.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
