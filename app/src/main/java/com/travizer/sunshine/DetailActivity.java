@@ -27,6 +27,7 @@ package com.travizer.sunshine;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.TextView;
+        import android.widget.Toast;
 
 public class DetailActivity extends ActionBarActivity {
     //public static Uri java;
@@ -59,7 +60,8 @@ public class DetailActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -71,6 +73,13 @@ public class DetailActivity extends ActionBarActivity {
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // Add this line in order for this fragment to handle menu events.
+            setHasOptionsMenu(true);
         }
 
         @Override
