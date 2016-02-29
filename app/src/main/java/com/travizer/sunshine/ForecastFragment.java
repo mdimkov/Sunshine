@@ -151,10 +151,28 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
-            long roundedHigh = Math.round(high);
-            long roundedLow = Math.round(low);
+            long roundedHigh = 0;
+            long roundedLow = 0;
+            String highLowStr = "";
 
-            String highLowStr = roundedHigh + "/" + roundedLow;
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String units = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric));
+
+
+            if (units.equals(getString(R.string.pref_units_metric))) {
+                roundedHigh = Math.round(high);
+                roundedLow = Math.round(low);
+                highLowStr = roundedHigh + "/" + roundedLow;
+            } else if (units.equals(getString(R.string.pref_units_imperial))) {
+                high = 1.8*high + 32;
+                low = 1.8*low + 32;
+                roundedHigh = Math.round(high);
+                roundedLow = Math.round(low);
+                highLowStr = roundedHigh + "/" + roundedLow;
+            } else {
+                highLowStr = "Error: Unit type not found!";
+            }
+
             return highLowStr;
         }
 

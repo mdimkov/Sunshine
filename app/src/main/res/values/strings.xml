@@ -7,4 +7,10 @@
     <string name="pref_location_key" translatable="false">location</string>
     <string name="pref_location_label">Location</string>
     <string name="pref_location_default" translatable="false">Sofia,BG</string>
+    <string name="pref_units_label_metric" translatable="false">metric</string>
+    <string name="pref_units_label_imperial" translatable="false">imperial</string>
+    <string name="pref_units_label" translatable="false">Units</string>
+    <string name="pref_units_metric" translatable="false">metric</string>
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+    <string name="pref_units_key" translatable="false">units</string>
 </resources>
