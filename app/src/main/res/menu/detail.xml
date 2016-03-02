@@ -7,4 +7,14 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="10"
+        android:title="@string/action_refresh"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/launch_map"
+        android:orderInCategory="20"
+        android:title="@string/map_intent"
+        app:showAsAction="never" />
 </menu>
